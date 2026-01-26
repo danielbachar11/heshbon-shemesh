@@ -108,22 +108,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signIn = async (idNumber: string, password: string) => {
     try {
-      // First, find the user's email by ID number
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('user_id')
-        .eq('id_number', idNumber)
-        .single();
-
-      if (profileError || !profileData) {
-        return { error: new Error('מספר תעודת זהות לא נמצא במערכת') };
-      }
-
-      // Get the user's email from auth
-      const { data: userData, error: userError } = await supabase.auth.admin?.getUserById?.(profileData.user_id);
-      
-      // Since we can't access admin API from client, we use a different approach
-      // The email format is based on the ID number
+      // Email format is based on the ID number
       const email = `${idNumber}@budget.app`;
       
       const { error } = await supabase.auth.signInWithPassword({
@@ -133,7 +118,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (error) {
         if (error.message.includes('Invalid login credentials')) {
-          return { error: new Error('סיסמה שגויה') };
+          return { error: new Error('מספר תעודת זהות או סיסמה שגויים') };
         }
         return { error };
       }
