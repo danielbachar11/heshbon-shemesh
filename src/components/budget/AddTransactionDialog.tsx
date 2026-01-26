@@ -25,7 +25,7 @@ interface AddTransactionDialogProps {
   onSubmit: (
     type: 'income' | 'expense',
     amount: number,
-    categoryId: string,
+    categoryId: string | null,
     description: string,
     date: string
   ) => Promise<{ error: Error | null }>;
@@ -48,10 +48,13 @@ export const AddTransactionDialog: React.FC<AddTransactionDialogProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!amount || !categoryId) return;
+    // Category is required only for expenses
+    if (!amount || (type === 'expense' && !categoryId)) return;
 
     setIsLoading(true);
-    const result = await onSubmit(type, parseFloat(amount), categoryId, description, date);
+    // Pass empty string or 'none' as null for category
+    const finalCategoryId = categoryId === 'none' || categoryId === '' ? null : categoryId;
+    const result = await onSubmit(type, parseFloat(amount), finalCategoryId, description, date);
     setIsLoading(false);
 
     if (!result.error) {
@@ -76,17 +79,8 @@ export const AddTransactionDialog: React.FC<AddTransactionDialogProps> = ({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Type Toggle */}
+          {/* Type Toggle - Expense on right (RTL), Income on left */}
           <div className="grid grid-cols-2 gap-3">
-            <Button
-              type="button"
-              variant={type === 'income' ? 'income' : 'outline'}
-              className="h-14"
-              onClick={() => handleTypeChange('income')}
-            >
-              <TrendingUp className="h-5 w-5 ml-2" />
-              הכנסה
-            </Button>
             <Button
               type="button"
               variant={type === 'expense' ? 'expense' : 'outline'}
@@ -95,6 +89,15 @@ export const AddTransactionDialog: React.FC<AddTransactionDialogProps> = ({
             >
               <TrendingDown className="h-5 w-5 ml-2" />
               הוצאה
+            </Button>
+            <Button
+              type="button"
+              variant={type === 'income' ? 'income' : 'outline'}
+              className="h-14"
+              onClick={() => handleTypeChange('income')}
+            >
+              <TrendingUp className="h-5 w-5 ml-2" />
+              הכנסה
             </Button>
           </div>
 
@@ -114,14 +117,19 @@ export const AddTransactionDialog: React.FC<AddTransactionDialogProps> = ({
             />
           </div>
 
-          {/* Category */}
+          {/* Category - Required for expense, optional for income */}
           <div className="space-y-2">
-            <Label>קטגוריה</Label>
-            <Select value={categoryId} onValueChange={setCategoryId} required>
+            <Label>
+              קטגוריה {type === 'expense' && <span className="text-destructive">*</span>}
+            </Label>
+            <Select value={categoryId} onValueChange={setCategoryId}>
               <SelectTrigger className="h-12">
-                <SelectValue placeholder="בחר קטגוריה" />
+                <SelectValue placeholder={type === 'income' ? 'בחר קטגוריה (אופציונלי)' : 'בחר קטגוריה'} />
               </SelectTrigger>
               <SelectContent>
+                {type === 'income' && (
+                  <SelectItem value="none">ללא קטגוריה</SelectItem>
+                )}
                 {filteredCategories.map((category) => (
                   <SelectItem key={category.id} value={category.id}>
                     {category.name}
@@ -161,7 +169,7 @@ export const AddTransactionDialog: React.FC<AddTransactionDialogProps> = ({
             type="submit"
             variant={type === 'income' ? 'income' : 'expense'}
             className="w-full h-14 text-lg"
-            disabled={isLoading || !amount || !categoryId}
+            disabled={isLoading || !amount || (type === 'expense' && !categoryId)}
           >
             {isLoading ? 'מוסיף...' : 'הוסף תנועה'}
           </Button>

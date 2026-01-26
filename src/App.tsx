@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { AuthPage } from "./pages/AuthPage";
 import { Dashboard } from "./pages/Dashboard";
+import { AdminLogin } from "./pages/AdminLogin";
+import { AdminDashboard } from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -64,6 +66,8 @@ const AppRoutes = () => (
         </PublicRoute>
       }
     />
+    <Route path="/admin-login" element={<AdminLogin />} />
+    <Route path="/admin" element={<AdminDashboard />} />
     <Route path="*" element={<NotFound />} />
   </Routes>
 );
