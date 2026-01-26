@@ -105,17 +105,36 @@ export const useTransactions = (month?: number, year?: number) => {
   const addTransaction = async (
     type: 'income' | 'expense',
     amount: number,
-    categoryId: string,
+    categoryId: string | null,
     description: string,
     transactionDate: string
   ) => {
     if (!user) return { error: new Error('לא מחובר') };
 
+    // For income without category, we need to handle it differently
+    // Get a default income category if none is provided
+    let finalCategoryId = categoryId;
+    if (type === 'income' && !categoryId) {
+      const incomeCategory = categories.find(c => c.type === 'income');
+      if (incomeCategory) {
+        finalCategoryId = incomeCategory.id;
+      }
+    }
+
+    if (!finalCategoryId) {
+      toast({
+        title: 'שגיאה',
+        description: 'לא נמצאה קטגוריה מתאימה',
+        variant: 'destructive',
+      });
+      return { error: new Error('No category found') };
+    }
+
     const { error } = await supabase.from('transactions').insert({
       user_id: user.id,
       type,
       amount,
-      category_id: categoryId,
+      category_id: finalCategoryId,
       description: description || null,
       transaction_date: transactionDate,
     });
