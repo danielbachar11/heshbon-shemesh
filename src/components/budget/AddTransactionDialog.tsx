@@ -48,8 +48,8 @@ export const AddTransactionDialog: React.FC<AddTransactionDialogProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Category is required only for expenses
-    if (!amount || (type === 'expense' && !categoryId)) return;
+    // Amount is required, category is optional for all types
+    if (!amount) return;
 
     setIsLoading(true);
     // Pass empty string or 'none' as null for category
@@ -117,19 +117,15 @@ export const AddTransactionDialog: React.FC<AddTransactionDialogProps> = ({
             />
           </div>
 
-          {/* Category - Required for expense, optional for income */}
+          {/* Category - Optional for all types */}
           <div className="space-y-2">
-            <Label>
-              קטגוריה {type === 'expense' && <span className="text-destructive">*</span>}
-            </Label>
+            <Label>קטגוריה (אופציונלי)</Label>
             <Select value={categoryId} onValueChange={setCategoryId}>
               <SelectTrigger className="h-12">
-                <SelectValue placeholder={type === 'income' ? 'בחר קטגוריה (אופציונלי)' : 'בחר קטגוריה'} />
+                <SelectValue placeholder="בחר קטגוריה (אופציונלי)" />
               </SelectTrigger>
               <SelectContent>
-                {type === 'income' && (
-                  <SelectItem value="none">ללא קטגוריה</SelectItem>
-                )}
+                <SelectItem value="none">ללא קטגוריה</SelectItem>
                 {filteredCategories.map((category) => (
                   <SelectItem key={category.id} value={category.id}>
                     {category.name}
@@ -169,7 +165,7 @@ export const AddTransactionDialog: React.FC<AddTransactionDialogProps> = ({
             type="submit"
             variant={type === 'income' ? 'income' : 'expense'}
             className="w-full h-14 text-lg"
-            disabled={isLoading || !amount || (type === 'expense' && !categoryId)}
+            disabled={isLoading || !amount}
           >
             {isLoading ? 'מוסיף...' : 'הוסף תנועה'}
           </Button>
