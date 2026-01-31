@@ -69,7 +69,9 @@ export const useTransactions = (month?: number, year?: number) => {
 
     if (month !== undefined && year !== undefined) {
       const startDate = new Date(year, month, 1).toISOString().split('T')[0];
-      const endDate = new Date(year, month + 1, 0).toISOString().split('T')[0];
+      // Get the last day of the month correctly
+      const lastDay = new Date(year, month + 1, 0).getDate();
+      const endDate = new Date(year, month, lastDay).toISOString().split('T')[0];
       query = query.gte('transaction_date', startDate).lte('transaction_date', endDate);
     }
 
@@ -111,13 +113,12 @@ export const useTransactions = (month?: number, year?: number) => {
   ) => {
     if (!user) return { error: new Error('לא מחובר') };
 
-    // For income without category, we need to handle it differently
-    // Get a default income category if none is provided
+    // Get a default category if none is provided
     let finalCategoryId = categoryId;
-    if (type === 'income' && !categoryId) {
-      const incomeCategory = categories.find(c => c.type === 'income');
-      if (incomeCategory) {
-        finalCategoryId = incomeCategory.id;
+    if (!categoryId) {
+      const defaultCategory = categories.find(c => c.type === type);
+      if (defaultCategory) {
+        finalCategoryId = defaultCategory.id;
       }
     }
 
