@@ -40,6 +40,16 @@ export const useTransactions = (month?: number, year?: number) => {
   const { user } = useAuth();
   const { toast } = useToast();
 
+  // IMPORTANT: avoid Date#toISOString() here, because converting local midnight to UTC
+  // can shift the date back a day (timezone), causing monthly ranges to exclude the
+  // last day of the month (e.g. 31/01 becomes 30/01).
+  const toLocalDateString = (date: Date) => {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  };
+
   const fetchCategories = async () => {
     const { data, error } = await supabase
       .from('categories')
@@ -68,10 +78,8 @@ export const useTransactions = (month?: number, year?: number) => {
       .order('transaction_date', { ascending: false });
 
     if (month !== undefined && year !== undefined) {
-      const startDate = new Date(year, month, 1).toISOString().split('T')[0];
-      // Get the last day of the month correctly
-      const lastDay = new Date(year, month + 1, 0).getDate();
-      const endDate = new Date(year, month, lastDay).toISOString().split('T')[0];
+      const startDate = toLocalDateString(new Date(year, month, 1));
+      const endDate = toLocalDateString(new Date(year, month + 1, 0));
       query = query.gte('transaction_date', startDate).lte('transaction_date', endDate);
     }
 
@@ -200,7 +208,7 @@ export const useTransactions = (month?: number, year?: number) => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [user]);
+  }, [user, month, year]);
 
   useEffect(() => {
     fetchCategories();
