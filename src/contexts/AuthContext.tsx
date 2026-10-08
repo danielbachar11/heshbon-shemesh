@@ -14,9 +14,11 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   profile: Profile | null;
+  householdId: string | null;
   isAdmin: boolean;
   isLoading: boolean;
   signIn: (idNumber: string, password: string) => Promise<{ error: Error | null }>;
+  signInWithGoogle: () => Promise<{ error: Error | null }>;
   signUp: (email: string, password: string, firstName: string, lastName: string, idNumber: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
@@ -36,6 +38,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [householdId, setHouseholdId] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -45,27 +48,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .from('profiles')
         .select('*')
         .eq('user_id', userId)
-        .single();
+        .maybeSingle();
 
       if (profileError) {
         console.error('Error fetching profile:', profileError);
-        return;
       }
-
       setProfile(profileData);
 
-      // Check if user is admin
+      const { data: hm } = await supabase
+        .from('household_members')
+        .select('household_id')
+        .eq('user_id', userId)
+        .maybeSingle();
+      setHouseholdId(hm?.household_id ?? null);
+
       const { data: roleData } = await supabase
         .from('user_roles')
         .select('role')
         .eq('user_id', userId)
         .eq('role', 'admin')
-        .single();
+        .maybeSingle();
 
       setIsAdmin(!!roleData);
     } catch (error) {
       console.error('Error in fetchProfile:', error);
     }
+  };
+
+  const signInWithGoogle = async () => {
+    const result = await lovable.auth.signInWithOAuth('google', { redirect_uri: window.location.origin });
+    if (result.error) return { error: new Error('ההתחברות עם Google נכשלה') };
+    return { error: null };
   };
 
   const refreshProfile = async () => {
