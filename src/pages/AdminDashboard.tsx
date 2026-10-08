@@ -207,6 +207,18 @@ export const AdminDashboard: React.FC = () => {
         variant: 'destructive',
       });
     } else {
+      // Put both accounts in the same household so they share one budget
+      const { data: hm } = await supabase
+        .from('household_members')
+        .select('household_id')
+        .eq('user_id', selectedUser1)
+        .maybeSingle();
+      if (hm?.household_id) {
+        await supabase.rpc('admin_move_user_household', {
+          _user_id: selectedUser2,
+          _household_id: hm.household_id,
+        });
+      }
       toast({ title: 'החשבונות חוברו בהצלחה' });
       setShowLinkDialog(false);
       setSelectedUser1('');
