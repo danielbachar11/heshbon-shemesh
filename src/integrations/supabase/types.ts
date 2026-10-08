@@ -17,27 +17,139 @@ export type Database = {
       categories: {
         Row: {
           color: string | null
+          household_id: string | null
           icon: string | null
           id: string
           is_default: boolean | null
           name: string
+          parent_id: string | null
           type: Database["public"]["Enums"]["transaction_type"]
         }
         Insert: {
           color?: string | null
+          household_id?: string | null
           icon?: string | null
           id?: string
           is_default?: boolean | null
           name: string
+          parent_id?: string | null
           type: Database["public"]["Enums"]["transaction_type"]
         }
         Update: {
           color?: string | null
+          household_id?: string | null
           icon?: string | null
           id?: string
           is_default?: boolean | null
           name?: string
+          parent_id?: string | null
           type?: Database["public"]["Enums"]["transaction_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "categories_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      family_members: {
+        Row: {
+          avatar: string | null
+          color: string | null
+          created_at: string
+          household_id: string
+          id: string
+          is_active: boolean
+          is_default: boolean
+          name: string
+          user_id: string | null
+        }
+        Insert: {
+          avatar?: string | null
+          color?: string | null
+          created_at?: string
+          household_id: string
+          id?: string
+          is_active?: boolean
+          is_default?: boolean
+          name: string
+          user_id?: string | null
+        }
+        Update: {
+          avatar?: string | null
+          color?: string | null
+          created_at?: string
+          household_id?: string
+          id?: string
+          is_active?: boolean
+          is_default?: boolean
+          name?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "family_members_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      household_members: {
+        Row: {
+          created_at: string
+          household_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          household_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          household_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "household_members_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      households: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
         }
         Relationships: []
       }
@@ -131,7 +243,13 @@ export type Database = {
           category_id: string
           created_at: string
           description: string | null
+          family_member_id: string | null
+          household_id: string | null
           id: string
+          is_recurring: boolean
+          notes: string | null
+          payment_method: string | null
+          subcategory_id: string | null
           transaction_date: string
           type: Database["public"]["Enums"]["transaction_type"]
           updated_at: string
@@ -142,7 +260,13 @@ export type Database = {
           category_id: string
           created_at?: string
           description?: string | null
+          family_member_id?: string | null
+          household_id?: string | null
           id?: string
+          is_recurring?: boolean
+          notes?: string | null
+          payment_method?: string | null
+          subcategory_id?: string | null
           transaction_date?: string
           type: Database["public"]["Enums"]["transaction_type"]
           updated_at?: string
@@ -153,7 +277,13 @@ export type Database = {
           category_id?: string
           created_at?: string
           description?: string | null
+          family_member_id?: string | null
+          household_id?: string | null
           id?: string
+          is_recurring?: boolean
+          notes?: string | null
+          payment_method?: string | null
+          subcategory_id?: string | null
           transaction_date?: string
           type?: Database["public"]["Enums"]["transaction_type"]
           updated_at?: string
@@ -163,6 +293,27 @@ export type Database = {
           {
             foreignKeyName: "transactions_category_id_fkey"
             columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transactions_family_member_id_fkey"
+            columns: ["family_member_id"]
+            isOneToOne: false
+            referencedRelation: "family_members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transactions_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transactions_subcategory_id_fkey"
+            columns: ["subcategory_id"]
             isOneToOne: false
             referencedRelation: "categories"
             referencedColumns: ["id"]
@@ -192,7 +343,12 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_move_user_household: {
+        Args: { _household_id: string; _user_id: string }
+        Returns: undefined
+      }
       get_partner_id: { Args: { _user_id: string }; Returns: string }
+      get_user_household: { Args: { _user_id: string }; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
