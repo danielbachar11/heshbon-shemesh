@@ -6,6 +6,31 @@ import { Trash2, TrendingUp, TrendingDown } from 'lucide-react';
 import { format } from 'date-fns';
 import { he } from 'date-fns/locale';
 import { useAuth } from '@/contexts/AuthContext';
+import { FileSpreadsheet, Loader2 } from 'lucide-react';
+import { exportTransactionsToExcel } from '@/lib/exportExcel';
+import { useToast } from '@/hooks/use-toast';
+
+const ExportButton: React.FC = () => {
+  const [busy, setBusy] = React.useState(false);
+  const { toast } = useToast();
+  const run = async () => {
+    setBusy(true);
+    try {
+      const n = await exportTransactionsToExcel();
+      toast({ title: 'הקובץ הורד', description: `${n} תנועות יוצאו לאקסל` });
+    } catch {
+      toast({ title: 'שגיאה', description: 'לא ניתן לייצא את הנתונים', variant: 'destructive' });
+    } finally {
+      setBusy(false);
+    }
+  };
+  return (
+    <Button variant="outline" size="sm" onClick={run} disabled={busy} className="gap-1">
+      {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <FileSpreadsheet className="h-4 w-4" />}
+      ייצוא לאקסל
+    </Button>
+  );
+};
 
 interface TransactionListProps {
   transactions: Transaction[];
@@ -43,8 +68,9 @@ export const TransactionList: React.FC<TransactionListProps> = ({
 
   return (
     <Card className="animate-slide-up" style={{ animationDelay: '0.2s' }}>
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0">
         <CardTitle className="text-base">היסטוריית תנועות</CardTitle>
+        <ExportButton />
       </CardHeader>
       <CardContent className="p-0">
         <div className="divide-y">
