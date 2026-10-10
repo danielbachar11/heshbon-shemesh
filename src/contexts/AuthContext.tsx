@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
+import { lovable } from '@/integrations/lovable/index';
 
 interface Profile {
   id: string;
@@ -186,9 +187,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       user,
       session,
       profile,
+      householdId,
       isAdmin,
       isLoading,
       signIn,
+      signInWithGoogle,
       signUp,
       signOut,
       refreshProfile,
