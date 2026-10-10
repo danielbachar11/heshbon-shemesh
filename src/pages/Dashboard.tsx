@@ -107,7 +107,20 @@ export const Dashboard: React.FC = () => {
         open={showAddDialog}
         onClose={() => setShowAddDialog(false)}
         categories={categories}
-        onSubmit={addTransaction}
+        onSubmit={(type, amount, categoryId, description, date) =>
+          addTransaction({
+            type,
+            amount,
+            categoryId,
+            subcategoryId: null,
+            familyMemberId: null,
+            paymentMethod: null,
+            isRecurring: false,
+            description,
+            notes: '',
+            date,
+          })
+        }
       />
 
       {/* Footer with Admin Link */}
