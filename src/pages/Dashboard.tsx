@@ -21,12 +21,17 @@ export const Dashboard: React.FC = () => {
     transactions,
     categories,
     isLoading,
-    totalIncome,
-    totalExpense,
-    balance,
     addTransaction,
     deleteTransaction,
   } = useTransactions(selectedMonth, selectedYear);
+
+  const totalIncome = transactions
+    .filter((t) => t.type === 'income')
+    .reduce((sum, t) => sum + Number(t.amount), 0);
+  const totalExpense = transactions
+    .filter((t) => t.type === 'expense')
+    .reduce((sum, t) => sum + Number(t.amount), 0);
+  const balance = totalIncome - totalExpense;
 
   const handleSignOut = async () => {
     await signOut();
