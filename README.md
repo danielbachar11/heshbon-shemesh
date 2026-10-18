@@ -1,73 +1,51 @@
-# Welcome to your Lovable project
+# Budget Buddy Pro
 
-## Project info
+פיתוח אפליקציית WEB לניהול תקציב משפחתי (הוצאות והכנסות) בעברית מלאה.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+דרישות כלליות:
 
-## How can I edit this code?
+שפה ועיצוב: האתר יהיה בעברית מלאה (RTL). העיצוב חייב להיות מודרני, נקי ומותאם באופן מושלם לסמארטפונים (Mobile First).
+מערכת משתמשים וזוגות: - יש לאפשר רישום והתחברות.
+יכולת ליבה: משתמש יכול "להזמין" או "לחבר" משתמש נוסף (למשל בן/בת זוג) לאותו חשבון, כך ששניהם יראו וינהלו את אותו התקציב בדיוק בזמן אמת.
+ניהול הוצאות והכנסות:
+מסך ראשי המציג יתרה עדכנית, סיכום הכנסות וסיכום הוצאות חודשי.
+כפתור "+" בולט להוספת תנועה (בחירה בין הכנסה להוצאה, קטגוריה, סכום ותאריך).
+היסטוריית תנועות מסודרת עם אפשרות לסינון לפי חודשים.
+ממשק אדמין (ניהול):
 
-There are several ways of editing your application.
+בתחתית האתר (Footer) יהיה כפתור קטן ודיסקרטי בשם "ניהול".
+לחיצה על הכפתור תוביל לדף התחברות לאדמין. הסיסמה לכניסה היא: b0584949588B.
+יכולות אדמין:
+צפייה ברשימת כל המשתמשים במערכת.
+יצירת משתמשים חדשים ידנית.
+אפשרות למחוק או לערוך משתמשים.
+דגשים טכניים לביצוע:
 
-**Use Lovable**
+צור ממשק משתמש (UI) עם כפתורים גדולים ונוחים ללחיצה בנייד.
+השתמש בגרפים פשוטים (כמו גרף עוגה או עמודות) להצגת פילוח הוצאות לפי קטגוריות.
+וודא שהלוגיקה של "תקציב משותף" עובדת כך שכל פעולה של משתמש א' תופיע מיד אצל משתמש ב'.
+לעשות שיהיה אופציה שליד כל הוצאה או הכנסה יהיה רשום השם של המשתמש שרק משתמש ADMIN בפאנל ניהול יוכל לפתוח משתמשים ולחבר בינהם בשדרות של המשתמשים יהיה שם פרטי משפחה מספר ת.ז סיסמה הכניסה תתבצע על ידי שם משתמש יהיה מספר ת.ז וסיסמה דבר נוסף שיהיה אופציה להוריד קובץ אקסל עם כל הפרטים דבר נוסף תעשה שיהיה לי אפשרות כמנהל להגדיר התרעה למשתמשים בשעות שאני רוצה כתזכורת בסוף יום להכניס הוצאות
+הוסף יכולות AI שינתחו את נתוני התקציב ויספקו תובנות והמלצות חכמות. לדוגמה: זיהוי מגמות הוצאה, המלצות לחיסכון, חיזוי תקציב לחודשים הבאים, והצגת סיכומים חודשיים/שנתיים אוטומטיים באופן ויזואלי וברור.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+This project was built with [Lovable](https://lovable.dev).
 
-Changes made via Lovable will be committed automatically to this repo.
+**Live app**: https://heshbon-shemesh.lovable.app
 
-**Use your preferred IDE**
+## Build with Lovable
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Continue developing this project in the [Lovable editor](https://lovable.dev/projects/3072da0e-53de-44b5-b92b-2fa1be24a567).
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- **Ship faster**: describe what you want to build and Lovable handles the code.
+- **Stay in sync**: every change made in Lovable is committed straight to this repository.
+- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
 
-Follow these steps:
+## Development
+
+Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
+git clone <this-repository-url>
+cd <repository-name>
 npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
 ```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
