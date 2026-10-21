@@ -8,6 +8,13 @@
       "when": 1791464526133,
       "tag": "0000_households_family_categories",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792563711244,
+      "tag": "0001_credit_card_sync",
+      "breakpoints": true
     }
   ]
 }
