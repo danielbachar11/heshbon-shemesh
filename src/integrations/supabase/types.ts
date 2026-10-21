@@ -237,57 +237,208 @@ export type Database = {
         }
         Relationships: []
       }
+      sync_api_keys: {
+        Row: {
+          created_at: string
+          created_by: string
+          household_id: string
+          id: string
+          key_hash: string
+          key_prefix: string
+          last_used_at: string | null
+          name: string
+          revoked_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          household_id: string
+          id?: string
+          key_hash: string
+          key_prefix: string
+          last_used_at?: string | null
+          name?: string
+          revoked_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          household_id?: string
+          id?: string
+          key_hash?: string
+          key_prefix?: string
+          last_used_at?: string | null
+          name?: string
+          revoked_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sync_api_keys_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sync_logs: {
+        Row: {
+          api_key_id: string | null
+          created_at: string
+          error_details: Json | null
+          errors: number
+          existing: number
+          household_id: string
+          id: string
+          inserted: number
+          needs_review: number
+          pending_to_completed: number
+          received: number
+          source: string
+          status: string
+          updated: number
+        }
+        Insert: {
+          api_key_id?: string | null
+          created_at?: string
+          error_details?: Json | null
+          errors?: number
+          existing?: number
+          household_id: string
+          id?: string
+          inserted?: number
+          needs_review?: number
+          pending_to_completed?: number
+          received?: number
+          source: string
+          status?: string
+          updated?: number
+        }
+        Update: {
+          api_key_id?: string | null
+          created_at?: string
+          error_details?: Json | null
+          errors?: number
+          existing?: number
+          household_id?: string
+          id?: string
+          inserted?: number
+          needs_review?: number
+          pending_to_completed?: number
+          received?: number
+          source?: string
+          status?: string
+          updated?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sync_logs_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       transactions: {
         Row: {
           amount: number
           category_id: string
+          charged_date: string | null
           created_at: string
           description: string | null
+          external_account: string | null
+          external_id: string | null
+          external_status: string | null
           family_member_id: string | null
+          fingerprint: string | null
           household_id: string | null
           id: string
+          import_key: string | null
+          installment_number: number | null
+          installments_total: number | null
           is_recurring: boolean
+          last_seen_at: string | null
+          linked_transaction_id: string | null
           notes: string | null
+          original_amount: number | null
+          original_currency: string | null
           payment_method: string | null
+          review_reason: string | null
+          review_status: string | null
+          source: string
           subcategory_id: string | null
           transaction_date: string
           type: Database["public"]["Enums"]["transaction_type"]
           updated_at: string
           user_id: string
+          user_modified_fields: string[]
         }
         Insert: {
           amount: number
           category_id: string
+          charged_date?: string | null
           created_at?: string
           description?: string | null
+          external_account?: string | null
+          external_id?: string | null
+          external_status?: string | null
           family_member_id?: string | null
+          fingerprint?: string | null
           household_id?: string | null
           id?: string
+          import_key?: string | null
+          installment_number?: number | null
+          installments_total?: number | null
           is_recurring?: boolean
+          last_seen_at?: string | null
+          linked_transaction_id?: string | null
           notes?: string | null
+          original_amount?: number | null
+          original_currency?: string | null
           payment_method?: string | null
+          review_reason?: string | null
+          review_status?: string | null
+          source?: string
           subcategory_id?: string | null
           transaction_date?: string
           type: Database["public"]["Enums"]["transaction_type"]
           updated_at?: string
           user_id: string
+          user_modified_fields?: string[]
         }
         Update: {
           amount?: number
           category_id?: string
+          charged_date?: string | null
           created_at?: string
           description?: string | null
+          external_account?: string | null
+          external_id?: string | null
+          external_status?: string | null
           family_member_id?: string | null
+          fingerprint?: string | null
           household_id?: string | null
           id?: string
+          import_key?: string | null
+          installment_number?: number | null
+          installments_total?: number | null
           is_recurring?: boolean
+          last_seen_at?: string | null
+          linked_transaction_id?: string | null
           notes?: string | null
+          original_amount?: number | null
+          original_currency?: string | null
           payment_method?: string | null
+          review_reason?: string | null
+          review_status?: string | null
+          source?: string
           subcategory_id?: string | null
           transaction_date?: string
           type?: Database["public"]["Enums"]["transaction_type"]
           updated_at?: string
           user_id?: string
+          user_modified_fields?: string[]
         }
         Relationships: [
           {
@@ -347,6 +498,7 @@ export type Database = {
         Args: { _household_id: string; _user_id: string }
         Returns: undefined
       }
+      create_sync_api_key: { Args: { _name?: string }; Returns: string }
       get_partner_id: { Args: { _user_id: string }; Returns: string }
       get_user_household: { Args: { _user_id: string }; Returns: string }
       has_role: {
@@ -355,6 +507,20 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      resolve_sync_review: {
+        Args: { _action: string; _id: string }
+        Returns: undefined
+      }
+      revoke_sync_api_key: { Args: { _id: string }; Returns: undefined }
+      sync_ingest: {
+        Args: {
+          _household: string
+          _source: string
+          _txns: Json
+          _user: string
+        }
+        Returns: Json
       }
     }
     Enums: {
