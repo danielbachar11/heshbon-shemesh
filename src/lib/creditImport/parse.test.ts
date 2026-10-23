@@ -19,7 +19,7 @@ describe('credit file parsing', () => {
   test('Israeli and Excel date formats', () => {
     expect(parseDate('05/10/2026')).toBe('2026-10-05');
     expect(parseDate('5.10.26')).toBe('2026-10-05');
-    expect(parseDate(46300)).toBe('2026-10-04');
+    expect(parseDate(46300)).toBe('2026-10-05');
     expect(parseDate('31/02/2026')).toBeNull();
   });
 
