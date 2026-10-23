@@ -284,51 +284,69 @@ export type Database = {
       sync_logs: {
         Row: {
           api_key_id: string | null
+          billing_month: string | null
           created_at: string
           error_details: Json | null
           errors: number
           existing: number
+          file_name: string | null
           household_id: string
           id: string
+          idempotency_key: string | null
           inserted: number
+          kind: string
           needs_review: number
           pending_to_completed: number
           received: number
+          result: Json | null
           source: string
           status: string
           updated: number
+          user_id: string | null
         }
         Insert: {
           api_key_id?: string | null
+          billing_month?: string | null
           created_at?: string
           error_details?: Json | null
           errors?: number
           existing?: number
+          file_name?: string | null
           household_id: string
           id?: string
+          idempotency_key?: string | null
           inserted?: number
+          kind?: string
           needs_review?: number
           pending_to_completed?: number
           received?: number
+          result?: Json | null
           source: string
           status?: string
           updated?: number
+          user_id?: string | null
         }
         Update: {
           api_key_id?: string | null
+          billing_month?: string | null
           created_at?: string
           error_details?: Json | null
           errors?: number
           existing?: number
+          file_name?: string | null
           household_id?: string
           id?: string
+          idempotency_key?: string | null
           inserted?: number
+          kind?: string
           needs_review?: number
           pending_to_completed?: number
           received?: number
+          result?: Json | null
           source?: string
           status?: string
           updated?: number
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -346,6 +364,7 @@ export type Database = {
           category_id: string
           charged_date: string | null
           created_at: string
+          credit_kind: string | null
           description: string | null
           external_account: string | null
           external_id: string | null
@@ -364,6 +383,7 @@ export type Database = {
           original_amount: number | null
           original_currency: string | null
           payment_method: string | null
+          report_date: string | null
           review_reason: string | null
           review_status: string | null
           source: string
@@ -379,6 +399,7 @@ export type Database = {
           category_id: string
           charged_date?: string | null
           created_at?: string
+          credit_kind?: string | null
           description?: string | null
           external_account?: string | null
           external_id?: string | null
@@ -397,6 +418,7 @@ export type Database = {
           original_amount?: number | null
           original_currency?: string | null
           payment_method?: string | null
+          report_date?: string | null
           review_reason?: string | null
           review_status?: string | null
           source?: string
@@ -412,6 +434,7 @@ export type Database = {
           category_id?: string
           charged_date?: string | null
           created_at?: string
+          credit_kind?: string | null
           description?: string | null
           external_account?: string | null
           external_id?: string | null
@@ -430,6 +453,7 @@ export type Database = {
           original_amount?: number | null
           original_currency?: string | null
           payment_method?: string | null
+          report_date?: string | null
           review_reason?: string | null
           review_status?: string | null
           source?: string
@@ -494,6 +518,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      _credit_file_engine: {
+        Args: {
+          _dry_run: boolean
+          _household: string
+          _rows: Json
+          _user: string
+        }
+        Returns: Json
+      }
+      _try_date: { Args: { t: string }; Returns: string }
+      _try_num: { Args: { t: string }; Returns: number }
       admin_move_user_household: {
         Args: { _household_id: string; _user_id: string }
         Returns: undefined
@@ -508,11 +543,25 @@ export type Database = {
         }
         Returns: boolean
       }
+      import_credit_file: {
+        Args: {
+          _billing_month: string
+          _file_name: string
+          _idempotency_key: string
+          _rows: Json
+        }
+        Returns: Json
+      }
+      preview_credit_import: { Args: { _rows: Json }; Returns: Json }
       resolve_sync_review: {
         Args: { _action: string; _id: string }
         Returns: undefined
       }
       revoke_sync_api_key: { Args: { _id: string }; Returns: undefined }
+      set_review_charged_date: {
+        Args: { _date: string; _id: string }
+        Returns: undefined
+      }
       sync_ingest: {
         Args: {
           _household: string
