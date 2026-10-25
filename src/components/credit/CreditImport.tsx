@@ -61,7 +61,7 @@ export const CreditImport: React.FC<{ onImported?: () => void }> = ({ onImported
       return;
     }
     const res: Record<number, RowResult> = {};
-    ((data as { rows: RowResult[] }).rows || []).forEach((r) => (res[r.ord] = r));
+    ((data as unknown as { rows: RowResult[] }).rows || []).forEach((r) => (res[r.ord] = r));
     setRows(parsed);
     setResults(res);
     setSelected(defaultSelection(parsed, res, m, other));
@@ -132,7 +132,7 @@ export const CreditImport: React.FC<{ onImported?: () => void }> = ({ onImported
       toast({ title: 'הייבוא נכשל', description: 'לא נשמר דבר. אפשר לנסות שוב בבטחה.', variant: 'destructive' });
       return;
     }
-    const r = data as Record<string, number>;
+    const r = data as unknown as Record<string, number>;
     setDone(r);
     toast({ title: 'הייבוא הושלם', description: `${r.inserted} עסקאות נוספו` });
     onImported?.();
