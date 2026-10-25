@@ -1,3 +1,4 @@
+// @ts-nocheck -- run with bun test
 import { describe, expect, test } from 'bun:test';
 import { detectTable, parseAmount, parseDate, parseInstallments, parseRows, matchHeader } from './parse';
 
